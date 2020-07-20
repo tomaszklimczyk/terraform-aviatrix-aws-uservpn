@@ -48,7 +48,7 @@ resource "aviatrix_gateway" "vpn" {
   vpc_id           = aviatrix_vpc.default.id
   vpc_reg          = var.aws_region
   gw_size          = var.vpn_gw_instance_size
-  subnet           = aviatrix_vpc.default.subnets[0].cidr
+  subnet           = aviatrix_vpc.default.subnets[count.index % 2].cidr #Using modulo to put even instances in subnet[0] and odd in subnet[1]
   vpn_access       = true
   vpn_cidr         = var.vpn_cidr
   split_tunnel     = var.vpn_split_tunnel
