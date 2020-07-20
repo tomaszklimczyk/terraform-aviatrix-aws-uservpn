@@ -57,9 +57,9 @@ resource "aviatrix_gateway" "vpn" {
   name_servers     = var.vpn_name_servers
   max_vpn_conn     = var.vpn_max_vpn_conn
   enable_elb       = true #Required for User Accelerator
-  elb_name         = var.spoke_name
-  saml_enabled     = false
-  #enable_vpn_nat   = false
+  elb_name         = "${var.spoke_name}-elb"
+  saml_enabled     = var.vpn_saml_enabled
+  enable_vpn_nat   = var.vpn_enable_vpn_nat
 }
 
 # Create an Aviatrix Vpn User Accelerator

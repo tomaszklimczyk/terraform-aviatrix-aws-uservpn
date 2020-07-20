@@ -14,6 +14,10 @@ variable "aws_account_name" {
   type = string
 }
 
+variable "transit_gw" {
+  type = string
+}
+
 variable "spoke_gw_instance_size" {
   type    = string
   default = "t3.medium"
@@ -29,10 +33,6 @@ variable "ha_gw" {
   default = true
 }
 
-variable "transit_gw" {
-  type = string
-}
-
 variable "vpn_gw_count" {
   type = string
   default = 2
@@ -45,7 +45,7 @@ variable "vpn_cidr" {
 
 variable "vpn_split_tunnel" {
   type = bool
-  default = 1
+  default = true
 }
 
 variable "vpn_additional_cidrs" {
@@ -70,5 +70,15 @@ variable "vpn_max_vpn_conn" {
 
 variable "vpn_user_accelerator" {
   type = bool
-  default = 1
+  default = true
+}
+
+variable "vpn_saml_enabled" {
+  type = bool
+  default = false
+}
+
+variable "vpn_enable_vpn_nat" {
+  type = bool
+  default = true
 }
