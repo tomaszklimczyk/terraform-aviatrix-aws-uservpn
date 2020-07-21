@@ -6,7 +6,7 @@ resource "aviatrix_vpc" "default" {
   cidr                 = var.cidr
   account_name         = var.aws_account_name
   aviatrix_firenet_vpc = false
-  aviatrix_transit_vpc = true
+  aviatrix_transit_vpc = false
 }
 
 # Single Spoke GW
