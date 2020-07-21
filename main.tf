@@ -34,7 +34,7 @@ resource "aviatrix_spoke_gateway" "ha" {
   vpc_id             = aws_vpc.default.id
   account_name       = var.aws_account_name
   subnet             = aviatrix_vpc.default.subnets[0].cidr
-  subnet             = aviatrix_vpc.default.subnets[1].cidr
+  ha_subnet             = aviatrix_vpc.default.subnets[1].cidr
   ha_gw_size         = var.spoke_gw_instance_size
   transit_gw         = var.transit_gw
 }
