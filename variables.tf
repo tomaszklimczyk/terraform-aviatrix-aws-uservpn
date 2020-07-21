@@ -82,3 +82,25 @@ variable "vpn_enable_vpn_nat" {
   type = bool
   default = true
 }
+
+variable "subnet_length" {
+  type = "map"
+  default = {
+    "1"   = "0"
+    "2"   = "1"
+    "3"   = "2"
+    "4"   = "2"
+    "5"   = "3"
+    "6"   = "3"
+    "7"   = "3"
+    "8"   = "3"
+    "9"   = "4"
+    "10"   = "4"
+    "11"   = "4"
+    "12"   = "4"
+    "13"   = "4"
+    "14"   = "4"
+    "15"   = "4"
+    "16"   = "4"
+  }
+}
