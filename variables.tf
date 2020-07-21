@@ -84,7 +84,7 @@ variable "vpn_enable_vpn_nat" {
 }
 
 variable "subnet_length" {
-  type = "map"
+  type = map
   default = {
     "1"   = "0"
     "2"   = "1"
