@@ -39,7 +39,7 @@ variable "vpn_gw_count" {
 }
 
 variable "vpn_cidr" {
-  type = string
+  type = list(string)
   default = ["10.255.254.0/24","10.255.255.0/24"]
 }
 
