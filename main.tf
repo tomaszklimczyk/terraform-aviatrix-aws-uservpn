@@ -65,5 +65,5 @@ resource "aviatrix_gateway" "vpn" {
 # Create an Aviatrix Vpn User Accelerator
 resource "aviatrix_vpn_user_accelerator" "vpc_accelerator" {
   count              = var.vpn_user_accelerator ? 1 : 0
-  elb_name = aviatrix_gateway.vpn.elb_name
+  elb_name = aviatrix_gateway.vpn[0].elb_name
 }
