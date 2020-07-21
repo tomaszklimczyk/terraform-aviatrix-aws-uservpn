@@ -27,7 +27,7 @@ key | value
 :--- | :---
 spoke_name | Name for the VPN spoke
 region | AWS region to deploy the transit VPC in
-cidr | The IP CIDR wo be used to create the VPC
+cidr | The IP CIDR to be used to create the VPC
 aws_account_name | The AWS accountname on the Aviatrix controller, under which the controller will deploy this VPC
 transit_gw | The name of the Aviatrix Transit gateway to attach the spoke
 
