@@ -4,7 +4,6 @@
 This module deploys a VPC, Aviatrix spoke gateways and one or more Aviatrix UserVPN gateways behind an elastic loadbalancer. To be used in conjunction with Aviatrix transit.
 
 ### Diagram
-\<Provide a diagram of the high level constructs thet will be created by this module>
 <img src="https://dhagens-repository-images-public.s3.eu-central-1.amazonaws.com/terraform-aviatrix-aws-uservpn/module-aviatrix-aws-uservpn.png.png">
 
 ### Usage Example
