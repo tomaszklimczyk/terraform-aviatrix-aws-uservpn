@@ -50,7 +50,7 @@ resource "aviatrix_gateway" "vpn" {
   gw_size          = var.vpn_gw_instance_size
   subnet           = aviatrix_vpc.default.subnets[length(aviatrix_vpc.default.subnets)/2+(count.index % 2)].cidr #Using modulo to put even instances in subnetlength/2+0 and odd in subnetlength/2+1
   vpn_access       = true
-  vpn_cidr         = cidrsubnet(var.vpn_cidr, ${var.var.subnet_length["${var.vpn_gw_count}"]}, count.index)
+  vpn_cidr         = cidrsubnet(var.vpn_cidr, var.subnet_length[var.vpn_gw_count]}, count.index)
   split_tunnel     = var.vpn_split_tunnel
   additional_cidrs = var.vpn_additional_cidrs
   search_domains   = var.vpn_search_domains
