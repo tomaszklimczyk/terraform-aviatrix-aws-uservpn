@@ -19,7 +19,7 @@ resource "aviatrix_spoke_gateway" "single" {
   gw_size            = var.spoke_gw_instance_size
   vpc_id             = aviatrix_vpc.default.vpc_id
   account_name       = var.aws_account_name
-  subnet             = aviatrix_vpc.default.subnets[0].cidr
+  subnet             = aviatrix_vpc.default.subnets[-1].cidr
   transit_gw         = var.transit_gw
 }
 
@@ -33,8 +33,8 @@ resource "aviatrix_spoke_gateway" "ha" {
   gw_size            = var.spoke_gw_instance_size
   vpc_id             = aviatrix_vpc.default.vpc_id
   account_name       = var.aws_account_name
-  subnet             = aviatrix_vpc.default.subnets[0].cidr
-  ha_subnet          = aviatrix_vpc.default.subnets[1].cidr
+  subnet             = aviatrix_vpc.default.subnets[-1].cidr
+  ha_subnet          = aviatrix_vpc.default.subnets[-2].cidr
   ha_gw_size         = var.spoke_gw_instance_size
   transit_gw         = var.transit_gw
 }
@@ -48,7 +48,7 @@ resource "aviatrix_gateway" "vpn" {
   vpc_id           = aviatrix_vpc.default.vpc_id
   vpc_reg          = var.region
   gw_size          = var.vpn_gw_instance_size
-  subnet           = aviatrix_vpc.default.subnets[count.index % 2].cidr #Using modulo to put even instances in subnet[0] and odd in subnet[1]
+  subnet           = aviatrix_vpc.default.subnets[(((count.index % 2) * -1) -1)].cidr #Using modulo to put even instances in subnet[-1] and odd in subnet[-2]
   vpn_access       = true
   vpn_cidr         = var.vpn_cidr
   split_tunnel     = var.vpn_split_tunnel
