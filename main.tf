@@ -44,7 +44,7 @@ resource "aviatrix_gateway" "vpn" {
   gw_name          = "${local.name}-vpn-gw-${count.index+1}"
   vpc_id           = aviatrix_vpc.default.vpc_id
   vpc_reg          = var.region
-  gw_size          = var.vpn_gw_instance_size
+  gw_size          = var.instance_size
   subnet           = local.subnet
   vpn_access       = true
   vpn_cidr         = var.vpn_cidr[count.index]
