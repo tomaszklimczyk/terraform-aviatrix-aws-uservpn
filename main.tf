@@ -39,7 +39,7 @@ resource "aviatrix_segmentation_security_domain_association" "default" {
 #Aviatrix VPN Gateway
 resource "aviatrix_gateway" "vpn" {
   count = var.vpn_gw_count
-  cloud_type       = 1
+  cloud_type       = 8
   account_name     = var.account
   gw_name          = "${local.name}-vpn-gw-${count.index+1}"
   vpc_id           = aviatrix_vpc.default.vpc_id
