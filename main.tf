@@ -1,54 +1,51 @@
-#Spoke VPC
 resource "aviatrix_vpc" "default" {
-  cloud_type           = 1
-  name                 = "${var.spoke_name}-spoke-vpc"
+  cloud_type           = 8
+  account_name         = var.account
   region               = var.region
+  name                 = local.name
   cidr                 = var.cidr
-  account_name         = var.aws_account_name
   aviatrix_firenet_vpc = false
-  aviatrix_transit_vpc = false
 }
 
-# Single Spoke GW
-resource "aviatrix_spoke_gateway" "single" {
-  count              = var.ha_gw ? 0 : 1
-  enable_active_mesh = true
-  cloud_type         = 1
-  vpc_reg            = var.region
-  gw_name            = "${var.spoke_name}-spoke-gw"
-  gw_size            = var.spoke_gw_instance_size
-  vpc_id             = aviatrix_vpc.default.vpc_id
-  account_name       = var.aws_account_name
-  subnet             = aviatrix_vpc.default.subnets[length(aviatrix_vpc.default.subnets)/2].cidr
-  transit_gw         = var.transit_gw
+resource "aviatrix_spoke_gateway" "default" {
+  cloud_type                        = 8
+  account_name                      = var.account
+  gw_name                           = local.name
+  vpc_id                            = aviatrix_vpc.default.vpc_id
+  vpc_reg                           = var.region
+  gw_size                           = var.instance_size
+  ha_gw_size                        = var.ha_gw ? var.instance_size : null
+  subnet                            = local.subnet
+  ha_subnet                         = var.ha_gw ? local.ha_subnet : null
+  insane_mode                       = var.insane_mode
+  enable_active_mesh                = var.active_mesh
+  manage_transit_gateway_attachment = false
 }
 
-# HA Spoke GW
-resource "aviatrix_spoke_gateway" "ha" {
-  count              = var.ha_gw ? 1 : 0
-  enable_active_mesh = true
-  cloud_type         = 1
-  vpc_reg            = var.region
-  gw_name            = "${var.spoke_name}-spoke-gw"
-  gw_size            = var.spoke_gw_instance_size
-  vpc_id             = aviatrix_vpc.default.vpc_id
-  account_name       = var.aws_account_name
-  subnet             = aviatrix_vpc.default.subnets[length(aviatrix_vpc.default.subnets)/2].cidr
-  ha_subnet          = aviatrix_vpc.default.subnets[length(aviatrix_vpc.default.subnets)/2+1].cidr
-  ha_gw_size         = var.spoke_gw_instance_size
-  transit_gw         = var.transit_gw
+resource "aviatrix_spoke_transit_attachment" "default" {
+  count           = var.attached ? 1 : 0
+  spoke_gw_name   = aviatrix_spoke_gateway.default.gw_name
+  transit_gw_name = var.transit_gw
+}
+
+resource "aviatrix_segmentation_security_domain_association" "default" {
+  count                = var.attached ? (length(var.security_domain) > 0 ? 1 : 0) : 0 #Only create resource when attached and security_domain is set.
+  transit_gateway_name = var.transit_gw
+  security_domain_name = var.security_domain
+  attachment_name      = aviatrix_spoke_gateway.default.gw_name
+  depends_on           = [aviatrix_spoke_transit_attachment.default] #Let's make sure this cannot create a race condition
 }
 
 #Aviatrix VPN Gateway
 resource "aviatrix_gateway" "vpn" {
   count = var.vpn_gw_count
   cloud_type       = 1
-  account_name     = var.aws_account_name
+  account_name     = var.account
   gw_name          = "${var.spoke_name}-vpn-gw-${count.index+1}"
   vpc_id           = aviatrix_vpc.default.vpc_id
   vpc_reg          = var.region
   gw_size          = var.vpn_gw_instance_size
-  subnet           = aviatrix_vpc.default.subnets[length(aviatrix_vpc.default.subnets)/2+(count.index % 2)].cidr #Using modulo to put even instances in subnetlength/2+0 and odd in subnetlength/2+1
+  subnet           = local.subnet
   vpn_access       = true
   vpn_cidr         = var.vpn_cidr[count.index]
   split_tunnel     = var.vpn_split_tunnel
@@ -62,8 +59,4 @@ resource "aviatrix_gateway" "vpn" {
   enable_vpn_nat   = var.vpn_enable_vpn_nat
 }
 
-# Create an Aviatrix Vpn User Accelerator
-resource "aviatrix_vpn_user_accelerator" "vpc_accelerator" {
-  count              = var.vpn_user_accelerator ? 1 : 0
-  elb_name = aviatrix_gateway.vpn[0].elb_name
-}
+
