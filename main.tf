@@ -41,7 +41,7 @@ resource "aviatrix_gateway" "vpn" {
   count = var.vpn_gw_count
   cloud_type       = 1
   account_name     = var.account
-  gw_name          = "${var.spoke_name}-vpn-gw-${count.index+1}"
+  gw_name          = "${local.name}-vpn-gw-${count.index+1}"
   vpc_id           = aviatrix_vpc.default.vpc_id
   vpc_reg          = var.region
   gw_size          = var.vpn_gw_instance_size
@@ -54,7 +54,7 @@ resource "aviatrix_gateway" "vpn" {
   name_servers     = var.vpn_name_servers
   max_vpn_conn     = var.vpn_max_vpn_conn
   enable_elb       = true #Required for User Accelerator
-  elb_name         = "${var.spoke_name}-elb"
+  elb_name         = "${local.name}-elb"
   saml_enabled     = var.vpn_saml_enabled
   enable_vpn_nat   = var.vpn_enable_vpn_nat
 }
